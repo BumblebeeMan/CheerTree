@@ -36,25 +36,28 @@ class CheerTree:
         
         """
         # Get current color value from Cheerlights API
-        response = self.requests.get(self.__hexColorPath__, headers=self.__HEADER__)
-        colorStr = str(response.content)
-        response.close()
-        colorStr = colorStr[3:9]
-        print(colorStr)
-        if len(colorStr) == 6: # color string contains exactly 6 hex letters
-            # convert each color to a value 0 to 1
-            r = self.__convertHexStringToFloat__(colorStr[0:2])
-            g = self.__convertHexStringToFloat__(colorStr[2:4])
-            b = self.__convertHexStringToFloat__(colorStr[4:6])
-            print(f"Red {r}, Green {g}, Blue {b}")
-            self.__lastColor__ = (r, g, b)
+        try:
+            response = self.requests.get(self.__hexColorPath__, headers=self.__HEADER__)
+            colorStr = str(response.content)
+            response.close()
+            colorStr = colorStr[3:9]
+            print(colorStr)
+            if len(colorStr) == 6: # color string contains exactly 6 hex letters
+            	# convert each color to a value 0 to 1
+            	r = self.__convertHexStringToFloat__(colorStr[0:2])
+            	g = self.__convertHexStringToFloat__(colorStr[2:4])
+            	b = self.__convertHexStringToFloat__(colorStr[4:6])
+            	print(f"Red {r}, Green {g}, Blue {b}")
+            	self.__lastColor__ = (r, g, b)
+        except:
+            self.__lastColor__ = (1,1,1)
     
     def getLastColor(self):
         return self.__lastColor__
     
     def updateTree(self):
         self.__loadColorValue__()
-        #self.tree.color = self.__lastColor__
+        self.tree.color = self.__lastColor__
         print(f"Color {self.__lastColor__}")
 
     def automode(self, updateTimingSec = 30, autoShutdown = None):
@@ -71,4 +74,5 @@ class CheerTree:
 
 if __name__ == '__main__':
     tree = CheerTree()
-    tree.automode(updateTimingSec = 1, autoShutdown = 1)
+    tree.automode(updateTimingSec = 60, autoShutdown = 1)
+
